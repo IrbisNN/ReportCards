@@ -41,6 +41,10 @@ class Classe(models.Model):
     def __str__(self):
         return self.name
 
+class StudentSchool(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+
 class StudentGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
@@ -53,6 +57,10 @@ class StudentGrade(models.Model):
 class StudentClasse(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     classId = models.ForeignKey(Classe, on_delete=models.CASCADE)
+
+class TeacherSchool(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
 class TeacherClasse(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)

@@ -6,8 +6,10 @@ from .models import Parent
 from .models import Grade
 from .models import Subject
 from .models import Classe
+from .models import StudentSchool
 from .models import StudentGrade
 from .models import StudentClasse
+from .models import TeacherSchool
 from .models import TeacherClasse
 from .models import ParentStudent
 from .models import TeacherSubject
@@ -20,8 +22,10 @@ admin.site.register(Parent)
 admin.site.register(Grade)
 admin.site.register(Subject)
 admin.site.register(Classe)
+admin.site.register(StudentSchool)
 admin.site.register(StudentGrade)
 admin.site.register(StudentClasse)
+admin.site.register(TeacherSchool)
 admin.site.register(TeacherClasse)
 admin.site.register(ParentStudent)
 admin.site.register(TeacherSubject)
