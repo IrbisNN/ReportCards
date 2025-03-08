@@ -1,19 +1,5 @@
 from django.contrib import admin
-from .models import School
-from .models import Student
-from .models import Teacher
-from .models import Parent
-from .models import Grade
-from .models import Subject
-from .models import Classe
-from .models import StudentSchool
-from .models import StudentGrade
-from .models import StudentClasse
-from .models import TeacherSchool
-from .models import TeacherClasse
-from .models import ParentStudent
-from .models import TeacherSubject
-from .models import Schedule
+from .models import School, Student, Teacher, Parent, Grade, Subject, Classe, StudentSchool, StudentGrade, StudentClasse, TeacherSchool, TeacherClasse, ParentStudent, TeacherSubject, Schedule
 
 admin.site.register(School)
 admin.site.register(Student)
