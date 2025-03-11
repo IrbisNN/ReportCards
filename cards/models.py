@@ -55,6 +55,9 @@ class StudentSchool(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.student.account.frist_name} {self.student.account.last_name} - {self.school.name}'
+
 class StudentGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
@@ -62,15 +65,21 @@ class StudentGrade(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.student.frist_name} {self.student.last_name} - {self.date} - {self.subject.name} - {self.grade.name}'
+        return f'{self.student.account.frist_name} {self.student.account.last_name} - {self.date} - {self.subject.name} - {self.grade.name}'
 
 class StudentClasse(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     classId = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.student.account.frist_name} {self.student.account.last_name} - {self.classId.name}'
+
 class TeacherSchool(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.teacher.account.frist_name} {self.teacher.account.last_name} - {self.school.name}'
 
 class TeacherClasse(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -81,9 +90,15 @@ class ParentStudent(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'Parent: {self.parent.account.frist_name} {self.parent.account.last_name} - Student: {self.student.account.frist_name} {self.student.account.last_name}'
+
 class TeacherSubject(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.teacher.account.frist_name} {self.teacher.account.last_name} - {self.subject.name}'
 
 class Schedule(models.Model):
     classId = models.ForeignKey(Classe, on_delete=models.CASCADE)

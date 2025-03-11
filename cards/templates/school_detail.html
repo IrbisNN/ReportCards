@@ -5,5 +5,11 @@
 {% block content %}
     <div class="school-detail">
         <h1>{{ school.name }}</h1>
+        <form action="{% url "cards:school_save" school.id %}" method="post">
+            {{ school_form }}
+            {% csrf_token %}
+            <input type="submit" value="Save">
+        </form>
+    </div>
     </div>
 {% endblock %}
