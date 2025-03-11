@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Schools{% endblock %}
+
+{% block content %}
+    <h1>So here is schools</h1>
+    <div id="main" class="school-list">
+        {% for school in schools %}
+            <div class="item">
+                <a href="{{ school.get_absolute_url }}">{{ school.name }}</a>
+                <br>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

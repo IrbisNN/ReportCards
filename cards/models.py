@@ -1,8 +1,15 @@
 from django.db import models
 from account.models import Account
+from django.urls import reverse
 
 class School(models.Model):
-	name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('cards:school_detail', args=[self.id])
 
 class Student(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -10,6 +17,9 @@ class Student(models.Model):
     def __str__(self):
         return f'{self.account.frist_name} {self.account.last_name}'
     
+    def full_name(self):
+        return self.account.frist_name + " " + self.account.last_name
+
 class Teacher(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
