@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student.full_name }}{% endblock %}
+
+{% block content %}
+    <div class="grade-detail">
+        <h1>{{ student.full_name }}</h1>
+
+        <form action="{% url "cards:grade_add" student.id %}" method="post">
+            {{ form }}
+            {% csrf_token %}
+            <input type="submit" value="Add grade">
+        </form>
+    </div>
+{% endblock %}

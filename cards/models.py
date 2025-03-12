@@ -20,6 +20,9 @@ class Student(models.Model):
     def full_name(self):
         return self.account.frist_name + " " + self.account.last_name
 
+    def get_absolute_url(self):
+        return reverse('cards:student_detail', args=[self.id])
+
 class Teacher(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
@@ -61,6 +64,7 @@ class StudentSchool(models.Model):
 class StudentGrade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, blank=True, null=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date = models.DateField()
 

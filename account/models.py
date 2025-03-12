@@ -10,3 +10,6 @@ class Account(models.Model):
 
     def __str__(self):
         return f'{self.frist_name} {self.last_name} ({self.user.username})'
+    
+    def full_name(self):
+        return self.frist_name + " " + self.last_name

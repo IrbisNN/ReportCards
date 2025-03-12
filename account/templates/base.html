@@ -17,7 +17,7 @@
                     <a href="{% url "cards:school_list" %}">Schools</a>
                 </li>
                 <li {% if section == "students" %}class="selected"{% endif %}>
-                    <a href="#">Students</a>
+                    <a href="{% url "cards:student_list" %}">Students</a>
                 </li>
             </ul>
         {% endif %}

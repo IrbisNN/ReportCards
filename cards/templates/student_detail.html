@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student.full_name }}{% endblock %}
+
+{% block content %}
+    <div class="student-detail">
+        <h1>{{ student.full_name }}</h1>
+        <dl>
+            <dt>Date of birth</dt>
+            <dd>{{ student.account.date_of_birth }}</dd>
+            <dt>E-mail</dt>
+            <dd>{{ student.account.user.email }}</dd>
+            <dt>Parents</dt>
+            <dd>
+                <ul>
+                    {% for parent in parents %}
+                        <li>{{ parent.parent.account.full_name }}</li>
+                    {% endfor %}
+                </ul>
+            </dd>
+            <dt>Schools</dt>
+            <dd>
+                <ul>
+                    {% for school in schools %}
+                        <li><a href="{{ school.school.get_absolute_url }}">{{ school.school.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <table class="grades">        
+        <h2>Grades</h2>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+                <tr>
+                    <td>
+                        {{ grade.date }}
+                    </td>
+                    <td>
+                        {{ grade.subject.name }}
+                    </td>
+                    <td>
+                        {{ grade.teacher.account.full_name }}
+                    </td>
+                    <td>
+                        {{ grade.grade.name }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form action="{% url "cards:grade_add" student.id %}" method="get">
+        <input type="submit" value="Add grade">
+    </form>
+{% endblock %}
