@@ -39,8 +39,8 @@ def student_detail(request, id):
 
 @login_required
 def grade_add(request, student_id):
+    studentOb = get_object_or_404(Student, id=student_id)
     if request.method == 'GET':
-        studentOb = get_object_or_404(Student, id=student_id)
         form = GradeAddForm()
         return render(request, 'grade_add.html', {'form': form, 'student': studentOb})
     elif request.method == 'POST':
@@ -49,10 +49,10 @@ def grade_add(request, student_id):
             cd = form.cleaned_data
             grade = StudentGrade()
             grade.student = get_object_or_404(Student, id=student_id)
-            # grade.grade = cd['grade']
-            # grade.subject = cd['subject']
-            # grade.teacher = cd['teacher']
-            # grade.date = cd['date']
+            grade.grade = cd['grade']
+            grade.subject = cd['subject']
+            grade.teacher = cd['teacher']
+            grade.date = cd['date']
             grade.save()
             return redirect('cards:student_detail', id=student_id)
         else:
