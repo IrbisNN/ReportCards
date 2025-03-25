@@ -133,3 +133,12 @@ LOGOUT_URL = 'logout'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+USE_L10N = False
+
+DATE_FORMAT = 'd.m.Y'
+DATETIME_FORMAT = 'd.m.Y H:i:s'
+TIME_FORMAT = 'H:i:s'
+DATETIME_INPUT_FORMATS = ["%d.%m.%Y %H:%M:%S",]
+DATE_INPUT_FORMATS  = ["%d.%m.%Y",]
+TIME_INPUT_FORMATS = ["%H:%M:%S",]

@@ -10,13 +10,22 @@ p {
     line-height: 1.8;
 }
 
-a {
+/*a {
     color:#12c064;
     text-decoration:none;
 }
 
 a:hover {
     color:#00a74f;
+}*/
+
+a {
+    text-decoration:none;
+    color:#5993bb;
+}
+
+a:hover {
+    color:#77b6e2;
 }
 
 h1, h2, h3, h4, h5 , h6 { font-family: 'Muli', sans-serif; font-weight:normal; }
@@ -35,10 +44,42 @@ ol {
     line-height:1.5;
 }
 
+table {
+    width:100%;
+    border-spacing:0;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    text-align:left;
+    font-size:14px;
+    padding:10px;
+    margin:0;
+}
+
+tbody tr:nth-child(odd) {
+    background:#efefef;
+}
+
+tbody tr.subtotal {
+    background:#ccc;
+}
+
+thead th, tbody tr.total {
+    background:#5993bb;
+    color:#fff;
+    font-weight:bold;
+}
+
+tbody td.num {
+    text-align:right;
+}
+
 #header {
     padding:10px 100px;
     font-size:14px;
-    background:#12c064;
+    /*background:#12c064;*/
+    background:#5993bb;
     color:#fff;
     border-bottom:4px solid #1cdf78;
     overflow:auto;

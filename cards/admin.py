@@ -22,8 +22,9 @@ class StudentClasseInline(admin.TabularInline):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    search_fields = ['account__frist_name', 'account__last_name']
-    list_display = ['account__frist_name', 'account__last_name', 'full_name']
+    search_fields = ['account__first_name', 'account__last_name']
+    list_display = ['account__first_name', 'account__last_name', 'full_name']
+    list_filter = ['account__user__is_active']
     autocomplete_fields = ['account']
     inlines = [
         StudentSchoolInline,
@@ -32,8 +33,8 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    search_fields = ['account__frist_name', 'account__last_name']
-    list_display = ['account__frist_name', 'account__last_name']
+    search_fields = ['account__first_name', 'account__last_name']
+    list_display = ['account__first_name', 'account__last_name']
     autocomplete_fields = ['account']
     inlines = [
         TeacherSchoolInline,
@@ -42,8 +43,8 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Parent)
 class ParentAdmin(admin.ModelAdmin):
-    search_fields = ['account__frist_name', 'account__last_name']
-    list_display = ['account__frist_name', 'account__last_name']
+    search_fields = ['account__first_name', 'account__last_name']
+    list_display = ['account__first_name', 'account__last_name']
     autocomplete_fields = ['account']
     inlines = [
         ParentStudentInline,
@@ -59,8 +60,8 @@ admin.site.register(TeacherSchool)
 
 @admin.register(TeacherClasse)
 class TeacherClasseAdmin(admin.ModelAdmin):
-    search_fields = ['teacher__account__frist_name', 'teacher__account__last_name']
-    list_display = ['teacher__account__frist_name', 'teacher__account__last_name', 'classId__name', 'isHeadTeacher']
+    search_fields = ['teacher__account__first_name', 'teacher__account__last_name']
+    list_display = ['teacher__account__first_name', 'teacher__account__last_name', 'classId__name', 'isHeadTeacher']
 
 admin.site.register(ParentStudent)
 admin.site.register(TeacherSubject)

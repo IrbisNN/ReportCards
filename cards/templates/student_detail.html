@@ -17,6 +17,9 @@
                         <li>{{ parent.parent.account.full_name }}</li>
                     {% endfor %}
                 </ul>
+                <form action="{% url "cards:parentstudent_add" student.id %}" method="get">
+                    <input type="submit" value="Add parent">
+                </form>
             </dd>
             <dt>Schools</dt>
             <dd>

@@ -3,6 +3,6 @@ from .models import Account
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    search_fields = ['frist_name', 'last_name']
-    list_display = ['frist_name', 'last_name', 'user']
+    search_fields = ['first_name', 'last_name']
+    list_display = ['first_name', 'last_name', 'user']
     autocomplete_fields = ['user']

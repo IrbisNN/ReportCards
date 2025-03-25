@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="grade-detail">
-        <h1>{{ student.full_name }}</h1>
+        <h1>Add grade to {{ student.full_name }}</h1>
 
         <form action="{% url "cards:grade_add" student.id %}" method="post">
             {{ form }}

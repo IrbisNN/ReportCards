@@ -10,5 +10,52 @@
             {% csrf_token %}
             <input type="submit" value="Save">
         </form>
+        <dl>
+            <dt>Teachers</dt>
+            <dd>
+                <ul>
+                    {% for teacher in teachers %}
+                    {% with account=teacher.teacher.account %}
+                        <li>
+                            <a href="{{ teacher.teacher.get_absolute_url }}">{{ account.full_name }}</a>
+                        </li>
+                    {% endwith %}    
+                    {% endfor %}
+                </ul>
+                <form action="{% url "cards:schoolteacher_add" school.id %}" method="get">
+                    <input type="submit" value="Add teacher">
+                </form>
+            </dd>
+            <dt>Students</dt>
+            <dd><table class="students">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>E-mail</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    {% with account=student.student.account %}
+                    <tr>
+                        <td>
+                            <a href="{{ student.student.get_absolute_url }}">{{ account.full_name }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ student.student.get_absolute_url }}">{{ account.date_of_birth }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ student.student.get_absolute_url }}">{{ account.user.email }}</a>
+                        </td>
+                    </tr>
+                    {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <form action="{% url "cards:schoolstudent_add" school.id %}" method="get">
+                <input type="submit" value="Add student">
+            </form></dd>
+        </dl>
     </div>
 {% endblock %}

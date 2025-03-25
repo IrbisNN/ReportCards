@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ teacher.full_name }}{% endblock %}
+
+{% block content %}
+    <div class="teacher-detail">
+        <h1>{{ teacher.full_name }}</h1>
+        <dl>
+            <dt>Date of birth</dt>
+            <dd>{{ teacher.account.date_of_birth }}</dd>
+            <dt>E-mail</dt>
+            <dd>{{ teacher.account.user.email }}</dd>
+            <dt>Schools</dt>
+            <dd>
+                <ul>
+                    {% for school in schools %}
+                        <li><a href="{{ school.school.get_absolute_url }}">{{ school.school.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </dd>
+            <dt>Classes</dt>
+            <dd>
+                <ul>
+                    {% for classe in classes %}
+                        <li>{{ classe }}</li>
+                    {% endfor %}
+                </ul>
+            </dd>
+            <dt>Subjects</dt>
+            <dd>
+                <form action="{% url "cards:teacher_detail" teacher.slug %}" method="post">
+                    <table class="table">
+                        {{ subjectformset.management_form }}
+            
+                        {% for form in subjectformset.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <th>{{ field.label|capfirst }}</th>
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr>
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields in the form #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% csrf_token %}
+                    <input type="submit" value="Save">
+                </form>
+            </dd>
+        </dl>
+    </div>
+{% endblock %}
