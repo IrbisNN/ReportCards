@@ -2,6 +2,7 @@ from django.db import models
 from account.models import Account
 from django.urls import reverse
 from django.template.defaultfilters import slugify
+from django.utils.translation import gettext_lazy as _
 
 class School(models.Model):
     name = models.CharField(max_length=100)
@@ -15,6 +16,14 @@ class School(models.Model):
     def change_name(self, school, name):
         school.name = name
         school.save()
+
+    def get_schedule(self):
+        fixed_schedule = FixedSchedule.objects.filter(school=self)
+        return fixed_schedule
+
+    def get_schedule_byclasse(self, classe):
+        fixed_schedule = FixedSchedule.objects.filter(school=self, classId=classe)
+        return fixed_schedule
 
 class Student(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -76,9 +85,10 @@ class Subject(models.Model):
 
 class Classe(models.Model):
     name = models.CharField(max_length=20)
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.school.name}'
 
 class StudentSchool(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -189,9 +199,52 @@ class TeacherSubject(models.Model):
     def __str__(self):
         return f'{self.teacher.account.first_name} {self.teacher.account.last_name} - {self.subject.name}'
 
+class Weekday(models.IntegerChoices):
+    MONDAY = 1, _("Monday")
+    THUESDAY = 2, _("Thuesday")
+    WEDNESDAY = 3, _("Wednesday")
+    THURSDAY = 4, _("Thursday")
+    FRIDAY = 5, _("Friday")
+    SATURDAY = 6, _("Saturday")
+    SUNDAY = 7, _("Sunday")
+
+    __empty__ = _("(Unknown)")
+
+class Daytype(models.TextChoices):
+    WEEKDAY = 'W', _("Weekday")
+    WEEKEND = 'E', _("Weekend")
+    HOLIDAY = 'H', _("Holiday")
+
+    __empty__ = _("(Unknown)")
+
 class Schedule(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True)
     classId = models.ForeignKey(Classe, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    weekDay = models.IntegerField()
-    year = models.IntegerField()
+    date = models.DateField(null=True)
+    startTime = models.TimeField(null=True)
+    duration = models.IntegerField(null=True)
+    weekDay = models.IntegerField(null=True, choices=Weekday.choices)
+    dayType = models.CharField(max_length=50, null=True, choices=Daytype.choices)
+
+class FixedSchedule(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    classId = models.ForeignKey(Classe, on_delete=models.CASCADE)
+    startDate = models.DateField()
+    endDate = models.DateField()
+    isActive = models.BooleanField(default=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.school.name} - {self.classId.name} - {self.startDate} - {self.endDate}'
+    
+class FixedScheduleDetail(models.Model):
+    schedule = models.ForeignKey(FixedSchedule, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    weekDay = models.IntegerField(choices=Weekday.choices)
+    startTime = models.TimeField()
+    duration = models.IntegerField()
+    dayType = models.CharField(max_length=50, choices=Daytype.choices)

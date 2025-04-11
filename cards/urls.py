@@ -15,4 +15,5 @@ urlpatterns = [
     path('sudents/parents/add/<int:student_id>/', views.parentstudent_add, name='parentstudent_add'),
     path('schools/students/add/<int:school_id>/', views.schoolstudent_add, name='schoolstudent_add'),
     path('teachers/<slug:slug>/', views.teacher_detail, name='teacher_detail'),
+    path('schools/schedule/edit/<int:school_id>/', views.schedule_edit, name='schedule_edit'),
 ]

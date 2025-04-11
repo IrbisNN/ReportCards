@@ -29,7 +29,7 @@
             <dt>Subjects</dt>
             <dd>
                 <form action="{% url "cards:teacher_detail" teacher.slug %}" method="post">
-                    <table class="table">
+                    <table class="adding">
                         {{ subjectformset.management_form }}
             
                         {% for form in subjectformset.forms %}

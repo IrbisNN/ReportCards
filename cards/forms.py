@@ -1,5 +1,5 @@
 from django import forms
-from .models import School, Student, StudentGrade, TeacherSchool, ParentStudent, StudentSchool, Classe, TeacherSubject, Teacher
+from .models import School, Student, StudentGrade, TeacherSchool, ParentStudent, StudentSchool, Classe, TeacherSubject, Teacher, FixedSchedule
 from account.models import Account
 from django.utils.translation import gettext_lazy as _
 from .roles import get_role_choices
@@ -47,3 +47,34 @@ class StudentSchoolAddForm(forms.ModelForm):
         fields = ['student']
 
 SubjectFormSet = inlineformset_factory(Teacher, TeacherSubject, fields=['subject'], extra = 1, can_delete=True)
+
+class ScheduleEditForm(forms.Form):
+    weekDay = forms.ChoiceField(choices=[(1, 'Monday'), (2, 'Thuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')], label=_('Week Day'), widget=forms.Select(), required=True)
+    startTime = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), label=_('Start Time'), required=True)
+    duration = forms.IntegerField(label=_('Duration'), required=True)
+    dayType = forms.ChoiceField(choices=[('W', 'Weekday'), ('E', 'Weekend'), ('H', 'Holiday')], label=_('Day Type'), widget=forms.Select(), required=True)
+    subject = forms.ModelChoiceField(queryset=Classe.objects.all(), label=_('Subject'), widget=forms.Select(), required=True)
+    teacher = forms.ModelChoiceField(queryset=Classe.objects.all(), label=_('Teacher'), widget=forms.Select(), required=True)
+    classId = forms.ModelChoiceField(queryset=Classe.objects.all(), label=_('Class'), widget=forms.Select(), required=True)
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label=_('Date'), required=True)
+    school = forms.ModelChoiceField(queryset=School.objects.all(), label=_('School'), widget=forms.Select(), required=True)
+
+class FixedScheduleAddForm(forms.ModelForm):
+    weekDay = forms.ChoiceField(choices=[(1, 'Monday'), (2, 'Thuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')], label=_('Week Day'), widget=forms.Select(), required=True)
+    startTime = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), label=_('Start Time'), required=True)
+    duration = forms.IntegerField(label=_('Duration'), required=True)
+    dayType = forms.ChoiceField(choices=[('W', 'Weekday'), ('E', 'Weekend'), ('H', 'Holiday')], label=_('Day Type'), widget=forms.Select(), required=True)
+    subject = forms.ModelChoiceField(queryset=Classe.objects.all(), label=_('Subject'), widget=forms.Select(), required=True)
+    teacher = forms.ModelChoiceField(queryset=Classe.objects.all(), label=_('Teacher'), widget=forms.Select(), required=True)
+
+    class Meta:
+        model = FixedSchedule
+        fields = ['weekDay', 'startTime', 'duration', 'dayType', 'subject', 'teacher', 'classId', 'school']
+        widgets = {
+            'weekDay': forms.Select(attrs={'class': 'form-control'}),
+            'startTime': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'duration': forms.NumberInput(attrs={'class': 'form-control'}),
+            'dayType': forms.Select(attrs={'class': 'form-control'}),
+            'subject': forms.Select(attrs={'class': 'form-control'}),
+            'teacher': forms.Select(attrs={'class': 'form-control'}),
+        }

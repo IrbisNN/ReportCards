@@ -10,6 +10,7 @@
             {% csrf_token %}
             <input type="submit" value="Save">
         </form>
+        <a href="{% url "cards:schedule_edit" school.id %}">Schedule</a>
         <dl>
             <dt>Teachers</dt>
             <dd>
@@ -27,32 +28,37 @@
                 </form>
             </dd>
             <dt>Students</dt>
-            <dd><table class="students">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>DOB</th>
-                    <th>E-mail</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {% for student in students %}
-                    {% with account=student.student.account %}
+            {% regroup students_classes by classId as student_list %}
+            <dd>{% for classe in student_list %}
+                <li>{{ classe.grouper.name }}:
+                <table class="students">
+                    <thead>
                     <tr>
-                        <td>
-                            <a href="{{ student.student.get_absolute_url }}">{{ account.full_name }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ student.student.get_absolute_url }}">{{ account.date_of_birth }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ student.student.get_absolute_url }}">{{ account.user.email }}</a>
-                        </td>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>E-mail</th>
                     </tr>
-                    {% endwith %}
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for student in classe.list %}
+                        {% with account=student.student.account %}
+                        <tr>
+                            <td>
+                                <a href="{{ student.student.get_absolute_url }}">{{ account.full_name }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ student.student.get_absolute_url }}">{{ account.date_of_birth }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ student.student.get_absolute_url }}">{{ account.user.email }}</a>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </li>
+                {% endfor %}
             <form action="{% url "cards:schoolstudent_add" school.id %}" method="get">
                 <input type="submit" value="Add student">
             </form></dd>

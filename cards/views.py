@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import School, Student, Teacher, Parent, StudentSchool, ParentStudent, StudentGrade, TeacherSchool, StudentSchool, StudentClasse, TeacherClasse, TeacherSubject
+from .models import School, Student, Teacher, Parent, StudentSchool, ParentStudent, StudentGrade, TeacherSchool, StudentSchool, StudentClasse, TeacherClasse, TeacherSubject, Classe, Weekday
 from .forms import SchoolForm, GradeAddForm, SchoolTeacherAddForm, AssignmentForm, ParentStudentAddForm, StudentSchoolAddForm, SubjectFormSet
 from django.contrib import messages
 from .roles import save_role
@@ -17,10 +17,11 @@ def school_detail(request, id):
     school_form = SchoolForm(initial={'name': school.name})
     teachers = TeacherSchool.objects.filter(school=school)
     students = StudentSchool.objects.filter(school=school, student__account__user__is_active=True)
+    students_classes = StudentClasse.objects.filter(school=school)
 
     return render(request,
                   'school_detail.html',
-                  {'school': school, 'school_form': school_form, 'teachers': teachers, 'students': students})
+                  {'school': school, 'school_form': school_form, 'teachers': teachers, 'students': students, 'students_classes': students_classes})
 
 @login_required
 def school_save(request, id):
@@ -135,3 +136,16 @@ def teacher_detail(request, slug):
     subjectformset = SubjectFormSet(instance=teacher)
     return render(request, 'teacher_detail.html',
                   {'teacher': teacher, 'schools': schools, 'classes': classes, 'subjectformset': subjectformset})
+
+@login_required
+def schedule_edit(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    classes = Classe.objects.filter(school=school)
+    week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    week_days = [(day.value, day.label) for day in Weekday]
+    fixed_schedule = school.get_schedule()
+    schedule_form = SchoolForm(initial={'name': school.name})
+
+    return render(request,
+                  'schedule_edit.html',
+                  {'school': school, 'week_days': week_days, 'classes': classes,  'schedule_form': schedule_form, 'fixed_schedule': fixed_schedule})

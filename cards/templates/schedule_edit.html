@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ school.name }}{% endblock %}
+
+{% block content %}
+    <div class="schedule-edit">
+        <h1>Schedule {{ school.name }}</h1>
+        <dl>
+            <dt>Fixed schedule</dt>
+            <dd>
+                <form action="{% url "cards:schedule_edit" school.id %}" method="post">
+                    <ul>
+                        {% regroup fixed_schedule by classId as classes_list %}
+                        {% for classe in classes_list %}
+                        <li>{{ classe.grouper.name }}:
+                        <table class="schedule">
+                            <thead>
+                            <tr>
+                                {% for dayK, dayV in week_days %}
+                                    <th>{{ dayV }}</th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for dayK, dayV in week_days %}
+                                        {% for subject in classe.list %}
+                                            <td>
+                                                {% if subject.weekDay == dayK %}
+                                                    {{ subject.startTime }} {{ subject.subject.name }} - {{ subject.teacher.account.full_name }}
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% csrf_token %}
+                <p><input type="submit" value="Save"></p>
+                </form>
+            </dd>
+        </dl>    
+    </div>
+{% endblock %}

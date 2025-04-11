@@ -7,8 +7,10 @@
         <h1>Add student to {{ school.name }}</h1>
 
         <form action="{% url "cards:schoolstudent_add" school.id %}" method="post">
-            {{ form }}
+            <table>
+            {{ form.as_table }}
             {% csrf_token %}
+            </table>
             <p><input type="submit" value="Add student"></p>
         </form>
     </div>

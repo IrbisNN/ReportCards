@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import School, Student, Teacher, Parent, Grade, Subject, Classe, StudentSchool, StudentGrade, StudentClasse, TeacherSchool, TeacherClasse, ParentStudent, TeacherSubject, Schedule
+from .models import School, Student, Teacher, Parent, Grade, Subject, Classe, StudentSchool, StudentGrade, StudentClasse, TeacherSchool, TeacherClasse, ParentStudent, TeacherSubject, Schedule, FixedSchedule
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
@@ -66,3 +66,4 @@ class TeacherClasseAdmin(admin.ModelAdmin):
 admin.site.register(ParentStudent)
 admin.site.register(TeacherSubject)
 admin.site.register(Schedule)
+admin.site.register(FixedSchedule)
