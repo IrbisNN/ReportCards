@@ -13,3 +13,6 @@ class Account(models.Model):
     
     def full_name(self):
         return self.first_name + " " + self.last_name
+
+    def short_name(self):
+        return self.last_name + " " + self.first_name[0:1] + "."

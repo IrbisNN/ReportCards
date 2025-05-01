@@ -1,9 +1,12 @@
 from django import forms
-from .models import School, Student, StudentGrade, TeacherSchool, ParentStudent, StudentSchool, Classe, TeacherSubject, Teacher, FixedSchedule
+from .models import School, Student, StudentGrade, TeacherSchool, ParentStudent, StudentSchool, Classe, TeacherSubject, Teacher, FixedSchedule, FixedScheduleDetail
 from account.models import Account
 from django.utils.translation import gettext_lazy as _
 from .roles import get_role_choices
 from django.forms import inlineformset_factory
+from django.forms import BaseInlineFormSet
+from django.core.exceptions import ValidationError
+import datetime
 
 class SchoolForm(forms.Form):
     name = forms.CharField(max_length=100)
@@ -78,3 +81,21 @@ class FixedScheduleAddForm(forms.ModelForm):
             'subject': forms.Select(attrs={'class': 'form-control'}),
             'teacher': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class FixedScheduleForm(forms.ModelForm):
+    class Meta:
+        model = FixedSchedule
+        fields = ['classId', 'startDate', 'endDate', 'isActive']
+
+class FixedScheduleDetailForm(forms.ModelForm):
+    class Meta:
+        model = FixedScheduleDetail
+        fields = ['subject', 'teacher', 'startTime', 'duration', 'dayType']
+
+FixedScheduleDetailFormSet = inlineformset_factory(
+    FixedSchedule,
+    FixedScheduleDetail,
+    form=FixedScheduleDetailForm,
+    extra=2,
+    can_delete=True
+)

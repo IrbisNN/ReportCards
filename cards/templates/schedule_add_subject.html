@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Add subject{% endblock %}
+
+{% block content %}
+    <dl>
+        <dt>Add subject to {{ fixed_schedule }} on {{ weekday }}</dt>
+        <dd>
+        <div class="add-subject">
+            <form action="{% url "cards:schedule_add_subject" fixed_schedule.id school.id weekdayId %}" method="post">
+                <table>
+                {{ form.as_table }}
+                {% csrf_token %}
+                </table>
+                <p><input type="submit" value="Add"></p>
+            </form>
+        </div>
+        </dd>
+{% endblock %}

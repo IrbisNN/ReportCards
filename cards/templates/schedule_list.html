@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ school.name }}{% endblock %}
+
+{% block content %}
+    <div class="schedule-list">
+        <h1>Schedules {{ school.name }}</h1>
+        <a href="{% url 'cards:schedule_new' school.id %}">Add Schedule</a>
+        <table>
+            <thead>
+            <tr>
+                <th>Class</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for schedule in fixed_schedules %}
+                <tr>
+                <td>{{ schedule.classId.name }}</td>
+                <td>{{ schedule.startDate }}</td>
+                <td>{{ schedule.endDate }}</td>
+                <td>{{ schedule.isActive }}</td>
+                <td>
+                    <a href="{% url 'cards:schedule_edit' school.id schedule.id %}">Edit</a>
+                </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No schedules yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>    
+    </div>
+{% endblock %}

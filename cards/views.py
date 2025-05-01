@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import School, Student, Teacher, Parent, StudentSchool, ParentStudent, StudentGrade, TeacherSchool, StudentSchool, StudentClasse, TeacherClasse, TeacherSubject, Classe, Weekday
-from .forms import SchoolForm, GradeAddForm, SchoolTeacherAddForm, AssignmentForm, ParentStudentAddForm, StudentSchoolAddForm, SubjectFormSet
+from .models import School, Student, Teacher, Parent, StudentSchool, ParentStudent, StudentGrade, TeacherSchool, StudentSchool, StudentClasse, TeacherClasse, TeacherSubject, Classe, Weekday, FixedSchedule, FixedScheduleDetail
+from .forms import SchoolForm, GradeAddForm, SchoolTeacherAddForm, AssignmentForm, ParentStudentAddForm, StudentSchoolAddForm, SubjectFormSet, FixedScheduleForm, FixedScheduleDetailForm
 from django.contrib import messages
 from .roles import save_role
 from django.forms import inlineformset_factory
@@ -138,14 +138,76 @@ def teacher_detail(request, slug):
                   {'teacher': teacher, 'schools': schools, 'classes': classes, 'subjectformset': subjectformset})
 
 @login_required
-def schedule_edit(request, school_id):
+def schedule_edit(request, school_id, schedule_id=None):
     school = get_object_or_404(School, id=school_id)
     classes = Classe.objects.filter(school=school)
-    week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     week_days = [(day.value, day.label) for day in Weekday]
-    fixed_schedule = school.get_schedule()
-    schedule_form = SchoolForm(initial={'name': school.name})
-
+    if schedule_id:
+        fixed_schedule = get_object_or_404(FixedSchedule, id=schedule_id)
+        fixed_schedule_details = FixedScheduleDetail.objects.filter(schedule=fixed_schedule)
+        if request.method == 'POST':
+            form = FixedScheduleForm(request.POST, instance=fixed_schedule)
+            if form.is_valid():
+                cd = form.cleaned_data
+                fixed_schedule.startDate = cd['startDate']
+                fixed_schedule.endDate = cd['endDate']
+                fixed_schedule.isActive = cd['isActive']
+                fixed_schedule.save()
+                messages.success(request, "Schedule updated successfully.")
+                return redirect('cards:schedule_edit', school_id=school_id, schedule_id=schedule_id)
+        else:
+            form = FixedScheduleForm(instance=fixed_schedule)
+    else:
+        fixed_schedule = None
+        fixed_schedule_details = None
+        if request.method == 'POST':
+            form = FixedScheduleForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                fixed_schedule = FixedSchedule.objects.create(school=school, classId=cd['classId'], startDate=cd['startDate'], endDate=cd['endDate'], isActive=cd['isActive'])
+                messages.success(request, "Schedule created successfully.")
+                return redirect('cards:schedule_edit', school_id=school_id, schedule_id=fixed_schedule.id)
+        else:
+            form = FixedScheduleForm()
+    
     return render(request,
                   'schedule_edit.html',
-                  {'school': school, 'week_days': week_days, 'classes': classes,  'schedule_form': schedule_form, 'fixed_schedule': fixed_schedule})
+                  {'school': school, 'week_days': week_days, 'classes': classes, 'fixed_schedule': fixed_schedule, 'schedule_details': fixed_schedule_details, 'form': form})
+
+@login_required
+def schedule_list(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    classes = Classe.objects.filter(school=school)
+    fixed_schedules = school.get_schedule()
+
+    return render(request,
+                  'schedule_list.html',
+                  {'school': school, 'fixed_schedules': fixed_schedules})
+
+@login_required
+def schedule_add_subject(request, school_id, schedule_id, weekdayId):
+    school = get_object_or_404(School, id=school_id)
+    fixed_schedule = get_object_or_404(FixedSchedule, id=schedule_id)
+    week_days = [(day.value, day.label) for day in Weekday]
+    weekday = Weekday(weekdayId).label
+    if request.method == 'POST':
+        form = FixedScheduleDetailForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            fixed_schedule_detail = FixedScheduleDetail.objects.create(
+                schedule = fixed_schedule,
+                subject = cd['subject'],
+                teacher = cd['teacher'],
+                weekDay = weekdayId,
+                startTime = cd['startTime'],
+                duration = cd['duration'],
+                dayType = cd['dayType']
+            )
+            fixed_schedule_detail.save()
+            messages.success(request, "Schedule updated successfully.")
+            return redirect('cards:schedule_edit', school_id=school_id, schedule_id=schedule_id)
+        else:
+            return render(request, 'schedule_add_subject.html', {'form': form, 'fixed_schedule': fixed_schedule, 'school': school, 'weekdayId': weekdayId, 'weekday': weekday})
+    else:
+        form = FixedScheduleDetailForm()
+        return render(request, 'schedule_add_subject.html', {'form': form, 'fixed_schedule': fixed_schedule, 'school': school, 'weekdayId': weekdayId, 'weekday': weekday})

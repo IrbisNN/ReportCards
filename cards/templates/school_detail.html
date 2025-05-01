@@ -10,7 +10,7 @@
             {% csrf_token %}
             <input type="submit" value="Save">
         </form>
-        <a href="{% url "cards:schedule_edit" school.id %}">Schedule</a>
+        <a href="{% url "cards:schedule_list" school.id %}">Schedules</a>
         <dl>
             <dt>Teachers</dt>
             <dd>

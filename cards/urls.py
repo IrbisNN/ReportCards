@@ -15,5 +15,8 @@ urlpatterns = [
     path('sudents/parents/add/<int:student_id>/', views.parentstudent_add, name='parentstudent_add'),
     path('schools/students/add/<int:school_id>/', views.schoolstudent_add, name='schoolstudent_add'),
     path('teachers/<slug:slug>/', views.teacher_detail, name='teacher_detail'),
-    path('schools/schedule/edit/<int:school_id>/', views.schedule_edit, name='schedule_edit'),
+    path('schools/schedule/list/<int:school_id>/', views.schedule_list, name='schedule_list'),
+    path('schools/schedule/new/<int:school_id>/', views.schedule_edit, name='schedule_new'),
+    path('schools/schedule/edit/<int:school_id>/<int:schedule_id>', views.schedule_edit, name='schedule_edit'),
+    path('schools/schedule/addsubject/<int:school_id>/<int:schedule_id>/<int:weekdayId>', views.schedule_add_subject, name='schedule_add_subject'),
 ]

@@ -7,41 +7,62 @@
         <h1>Schedule {{ school.name }}</h1>
         <dl>
             <dt>Fixed schedule</dt>
-            <dd>
-                <form action="{% url "cards:schedule_edit" school.id %}" method="post">
-                    <ul>
-                        {% regroup fixed_schedule by classId as classes_list %}
-                        {% for classe in classes_list %}
-                        <li>{{ classe.grouper.name }}:
-                        <table class="schedule">
-                            <thead>
-                            <tr>
-                                {% for dayK, dayV in week_days %}
-                                    <th>{{ dayV }}</th>
-                                {% endfor %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {% for dayK, dayV in week_days %}
-                                        {% for subject in classe.list %}
-                                            <td>
-                                                {% if subject.weekDay == dayK %}
-                                                    {{ subject.startTime }} {{ subject.subject.name }} - {{ subject.teacher.account.full_name }}
-                                                {% endif %}
-                                            </td>
-                                        {% endfor %}
-                                    {% endfor %}
-                                </tr>
-                            </tbody>
-                        </table>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% csrf_token %}
+            {% if fixed_schedule is None %}
+            <form action="{% url "cards:schedule_new" school.id %}" method="post">
+            {% endif %}
+            {% if fixed_schedule is not None %}
+            <form action="{% url "cards:schedule_edit" school.id fixed_schedule.id %}" method="post">  
+            {% endif %}
+                <table>
+                {{ form.as_table }}
+                {% csrf_token %}
+                </table>
                 <p><input type="submit" value="Save"></p>
-                </form>
+            </form>
+            {% if fixed_schedule is None %}
+            <dd>
+                <p>Save schedule to edit details</p>
             </dd>
+            {% endif %}
+            {% if fixed_schedule is not None %}
+            <dd>
+                <table class="schedule">
+                    <thead>
+                    <tr>
+                        <th>Time</th>
+                        {% for dayK, dayV in week_days %}
+                            <th>{{ dayV }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% regroup schedule_details by startTime as time_list %}
+                        {% for time in time_list %}
+                        <tr>
+                            <td>{{ time.grouper }}</td>
+                            {% for dayK, dayV in week_days %}
+                                <td>
+                                {% for subject in time.list %}
+                                    {% if subject.weekDay == dayK %}
+                                        {{ subject.subject.name }} - {{ subject.teacher.account.short_name }}
+                                    {% endif %}
+                                {% endfor %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            {% for dayK, dayV in week_days %}
+                            <td>
+                                <a href="{% url 'cards:schedule_add_subject' school.id fixed_schedule.id dayK %}">Add</a>
+                            </td> 
+                            {% endfor %}
+                        </tr> 
+                    </tbody>
+                </table>
+            </dd>
+            {% endif %}
         </dl>    
     </div>
 {% endblock %}

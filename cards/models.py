@@ -53,6 +53,9 @@ class Teacher(models.Model):
     def full_name(self):
         return self.account.first_name + " " + self.account.last_name
 
+    def short_name(self):
+        return self.account.last_name + " " + self.account.first_name[0] + "."
+
     def get_absolute_url(self):
         return reverse('cards:teacher_detail', args=[self.slug])
 
@@ -248,3 +251,6 @@ class FixedScheduleDetail(models.Model):
     startTime = models.TimeField()
     duration = models.IntegerField()
     dayType = models.CharField(max_length=50, choices=Daytype.choices)
+
+    def __str__(self):
+        return f'{self.startTime} - {self.subject.name} - {self.teacher.account.last_name} {self.teacher.account.last_name[0]}.'
