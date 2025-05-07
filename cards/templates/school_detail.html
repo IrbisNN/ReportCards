@@ -23,13 +23,15 @@
                     {% endwith %}    
                     {% endfor %}
                 </ul>
-                <form action="{% url "cards:schoolteacher_add" school.id %}" method="get">
-                    <input type="submit" value="Add teacher">
-                </form>
             </dd>
+            <form action="{% url "cards:schoolteacher_add" school.id %}" method="get">
+                <input type="submit" value="Add teacher">
+            </form>
             <dt>Students</dt>
             {% regroup students_classes by classId as student_list %}
-            <dd>{% for classe in student_list %}
+            <dd>
+                {% for classe in student_list %}
+                <ul>
                 <li>{{ classe.grouper.name }}:
                 <table class="students">
                     <thead>
@@ -59,9 +61,11 @@
                 </table>
                 </li>
                 {% endfor %}
+                <ul>
+            </dd>
             <form action="{% url "cards:schoolstudent_add" school.id %}" method="get">
                 <input type="submit" value="Add student">
-            </form></dd>
+            </form>
         </dl>
     </div>
 {% endblock %}

@@ -211,3 +211,10 @@ def schedule_add_subject(request, school_id, schedule_id, weekdayId):
     else:
         form = FixedScheduleDetailForm()
         return render(request, 'schedule_add_subject.html', {'form': form, 'fixed_schedule': fixed_schedule, 'school': school, 'weekdayId': weekdayId, 'weekday': weekday})
+
+@login_required
+def schedule_delete_subject(request, fixedId):
+    fixed_schedule_detail = get_object_or_404(FixedScheduleDetail, id=fixedId)
+    fixed_schedule_detail.delete()
+    messages.success(request, "Schedule subject deleted successfully.")
+    return redirect('cards:schedule_edit', school_id=fixed_schedule_detail.schedule.school.id, schedule_id=fixed_schedule_detail.schedule.id)

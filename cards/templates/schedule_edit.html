@@ -32,6 +32,7 @@
                         <th>Time</th>
                         {% for dayK, dayV in week_days %}
                             <th>{{ dayV }}</th>
+                            <th></th>
                         {% endfor %}
                     </tr>
                     </thead>
@@ -48,6 +49,13 @@
                                     {% endif %}
                                 {% endfor %}
                                 </td>
+                                <td>
+                                {% for subject in time.list %}
+                                    {% if subject.weekDay == dayK %}
+                                        <a href="{% url 'cards:schedule_delete_subject' subject.id %}">X</a>
+                                    {% endif %}
+                                {% endfor %}
+                                </td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
@@ -57,6 +65,7 @@
                             <td>
                                 <a href="{% url 'cards:schedule_add_subject' school.id fixed_schedule.id dayK %}">Add</a>
                             </td> 
+                            <td></td>
                             {% endfor %}
                         </tr> 
                     </tbody>

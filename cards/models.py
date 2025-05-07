@@ -254,3 +254,6 @@ class FixedScheduleDetail(models.Model):
 
     def __str__(self):
         return f'{self.startTime} - {self.subject.name} - {self.teacher.account.last_name} {self.teacher.account.last_name[0]}.'
+
+    class Meta:
+        ordering = ['startTime']

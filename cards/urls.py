@@ -19,4 +19,5 @@ urlpatterns = [
     path('schools/schedule/new/<int:school_id>/', views.schedule_edit, name='schedule_new'),
     path('schools/schedule/edit/<int:school_id>/<int:schedule_id>', views.schedule_edit, name='schedule_edit'),
     path('schools/schedule/addsubject/<int:school_id>/<int:schedule_id>/<int:weekdayId>', views.schedule_add_subject, name='schedule_add_subject'),
+    path('schools/schedule/deletesubject/<int:fixedId>', views.schedule_delete_subject, name='schedule_delete_subject'),
 ]
