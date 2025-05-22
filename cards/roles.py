@@ -15,7 +15,7 @@ def get_role_choices():
 
 def save_role(role, account):
     if role == 'Student':
-        exist = Student.objects.filter(account=account)
+        exist = Student.objects.filter(account=account).exists()
         if exist:
             return 'Student already exist'
         newStudent = Student()
@@ -23,7 +23,7 @@ def save_role(role, account):
         newStudent.save()
         return 'Student saved successfully'
     elif role == 'Teacher':
-        exist = Teacher.objects.filter(account=account)
+        exist = Teacher.objects.filter(account=account).exists()
         if exist:
             return 'Teacher already exist'
         newStudent = Teacher()
@@ -31,7 +31,7 @@ def save_role(role, account):
         newStudent.save()
         return 'Teacher saved successfully'
     elif role == 'Parent':
-        exist = Parent.objects.filter(account=account)
+        exist = Parent.objects.filter(account=account).exists()
         if exist:
             return 'Parent already exist'
         newStudent = Parent()

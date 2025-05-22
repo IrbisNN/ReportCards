@@ -5,6 +5,10 @@ from .forms import SchoolForm, GradeAddForm, SchoolTeacherAddForm, AssignmentFor
 from django.contrib import messages
 from .roles import save_role
 from django.forms import inlineformset_factory
+from django.views.generic.edit import UpdateView
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 @login_required
 def school_list(request):
@@ -13,15 +17,33 @@ def school_list(request):
 
 @login_required
 def school_detail(request, id):
-    school = get_object_or_404(School, id=id)
+    school = get_object_or_404(School.objects.prefetch_related(
+            'teacherschool_set__teacher',
+            'studentschool_set__student__account__user',
+            'studentclasse_set'
+        ), id=id)
     school_form = SchoolForm(initial={'name': school.name})
-    teachers = TeacherSchool.objects.filter(school=school)
-    students = StudentSchool.objects.filter(school=school, student__account__user__is_active=True)
-    students_classes = StudentClasse.objects.filter(school=school)
+    return render(request, 'school_detail.html', {
+            'school': school,
+            'school_form': school_form,
+            'teachers': school.teacherschool_set.all(),
+            'students': school.studentschool_set.filter(student__account__user__is_active=True),
+            'students_classes': school.studentclasse_set.all(),
+        })
 
-    return render(request,
-                  'school_detail.html',
-                  {'school': school, 'school_form': school_form, 'teachers': teachers, 'students': students, 'students_classes': students_classes})
+class SchoolDetailView(LoginRequiredMixin, DetailView):
+    model = School
+    template_name = 'school_detail.html'
+    context_object_name = 'school'
+    form_class = SchoolForm
+    pk_url_kwarg = 'id'
+
+    def get_queryset(self):
+        return School.objects.prefetch_related(
+            'teacherschool_set__teacher',
+            'studentschool_set__student__account__user',
+            'studentclasse_set'
+        )
 
 @login_required
 def school_save(request, id):
@@ -29,13 +51,20 @@ def school_save(request, id):
     school_form = SchoolForm(request.POST)
     if school_form.is_valid():
         cd = school_form.cleaned_data
-        School.change_name(school, cd['name'])
+        school.change_name(cd['name'])
     return redirect('cards:school_detail', id=id)
+
+class SchoolUpdateView(LoginRequiredMixin, UpdateView):
+    model = School
+    form_class = SchoolForm
+
+    def get_success_url(self):
+        return reverse_lazy('cards:school_detail', args=[self.object.id])
 
 @login_required
 def student_list(request):
-    sudents = Student.objects.filter(account__user__is_active=True)
-    return render(request, 'students.html', {'students': sudents})
+    students = Student.objects.filter(account__user__is_active=True)
+    return render(request, 'students.html', {'students': students})
 
 @login_required
 def student_detail(request, slug):

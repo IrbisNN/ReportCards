@@ -13,9 +13,9 @@ class School(models.Model):
     def get_absolute_url(self):
         return reverse('cards:school_detail', args=[self.id])
 
-    def change_name(self, school, name):
-        school.name = name
-        school.save()
+    def change_name(self, name):
+        self.name = name
+        self.save()
 
     def get_schedule(self):
         fixed_schedule = FixedSchedule.objects.filter(school=self)
@@ -33,7 +33,7 @@ class Student(models.Model):
         return f'{self.account.first_name} {self.account.last_name}'
     
     def full_name(self):
-        return self.account.first_name + " " + self.account.last_name
+        return f'{self.account.first_name} {self.account.last_name}'
 
     def get_absolute_url(self):
         return reverse('cards:student_detail', args=[self.slug])
@@ -51,10 +51,10 @@ class Teacher(models.Model):
         return f'{self.account.first_name} {self.account.last_name}'
 
     def full_name(self):
-        return self.account.first_name + " " + self.account.last_name
+        return f'{self.account.first_name} {self.account.last_name}'
 
     def short_name(self):
-        return self.account.last_name + " " + self.account.first_name[0] + "."
+        return f'{self.account.last_name} {self.account.first_name[0]}.'
 
     def get_absolute_url(self):
         return reverse('cards:teacher_detail', args=[self.slug])

@@ -8,7 +8,7 @@ from django.forms import BaseInlineFormSet
 from django.core.exceptions import ValidationError
 import datetime
 
-class SchoolForm(forms.Form):
+class SchoolForm(forms.ModelForm):
     name = forms.CharField(max_length=100)
 
     class Meta:
